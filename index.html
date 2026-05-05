@@ -198,16 +198,8 @@ async function doResearch(){
     </div>`;
   document.getElementById('memo-wrap').style.display='none';
 
-  const prompt=`あなたは日本のAmazon書籍リサーチの専門家です。
-
-【絶対厳守】架空の本・存在しない本は絶対に出力禁止。実在が確認できない本は出力しないこと。
-
-「${kw}」というキーワードで日本のAmazonに実際に存在する本を8冊選んでください。
-知っている実在の本のみを対象とし、不確かな場合は省いてください。
-amazon_urlはタイトルと著者名でAmazon検索するURLを作成してください。
-
-JSONのみ返答（前置き・説明一切不要）:
-{"books":[{"title":"実在する正確なタイトル","author":"実在する著者名","format":"Amazon","price":"¥1540","rating":"4.2","reviews":"312","rank":"5","pages":"200","description":"実際の内容説明80文字","amazon_url":"https://www.amazon.co.jp/s?k=タイトルのみ&i=stripbooks","tags":["タグ1","タグ2"]}],"insight":"このジャンルの市場トレンド80文字"}`;
+  const prompt=`「${kw}」に関連する日本のAmazonで実際に販売されている大人向け自己啓発・恋愛・男性向け本を8冊教えてください。実在する本のみ。架空の本は絶対禁止。以下のJSON形式のみで返答してください（説明文不要）:
+{"books":[{"title":"本のタイトル","author":"著者名","format":"Amazon","price":"1540円","rating":"4.2","reviews":"312","rank":"5","pages":"200","description":"内容説明","tags":["タグ1","タグ2"]}],"insight":"市場トレンド"}`;
 
   try{
     const res=await fetch('https://api.anthropic.com/v1/messages',{
