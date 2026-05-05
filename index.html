@@ -198,10 +198,8 @@ async function doResearch(){
     </div>`;
   document.getElementById('memo-wrap').style.display='none';
 
-  const prompt=`日本のAmazonで「${kw}」に関連する実在する大人向け自己啓発・恋愛・男性向けライフスタイル本を8冊ウェブ検索してリストアップしてください。
-
-必ず実在する本のみを対象とし、以下をJSONで返してください。前置き・説明不要。
-{"books":[{"title":"正確なタイトル","author":"著者名","format":"Amazon","price":"¥1,540","rating":"4.3","reviews":"523","rank":"5","pages":"224","description":"内容説明200文字","amazon_url":"https://www.amazon.co.jp/dp/実際のASIN","tags":["タグ1","タグ2","タグ3"]}],"insight":"市場トレンドと出版機会200文字"}`;
+  const prompt=`日本Amazonで「${kw}」関連の大人向け自己啓発・恋愛・男性向け本8冊。実在する本のみ。JSONのみ返答（前置き不要）:
+{"books":[{"title":"タイトル","author":"著者","format":"Amazon","price":"¥1540","rating":"4.2","reviews":"312","rank":"5","pages":"200","description":"内容80文字","amazon_url":"https://www.amazon.co.jp/dp/ASIN","tags":["タグ1","タグ2"]}],"insight":"トレンド80文字"}`;
 
   try{
     const res=await fetch('https://api.anthropic.com/v1/messages',{
@@ -213,9 +211,8 @@ async function doResearch(){
         'anthropic-dangerous-direct-browser-access':'true'
       },
       body:JSON.stringify({
-        model:'claude-sonnet-4-6',
-        max_tokens:6000,
-        tools:[{type:"web_search_20250305",name:"web_search"}],
+        model:'claude-haiku-4-5-20251001',
+        max_tokens:2000,
         messages:[{role:'user',content:prompt}]
       })
     });
