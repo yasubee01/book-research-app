@@ -155,7 +155,7 @@ function renderResults(books,insight){
     html+=`<div class="result-count">${books.length}冊見つかりました</div>`;
   }
   books.forEach((b,i)=>{
-    const amzUrl=`https://www.amazon.co.jp/s?k=${encodeURIComponent((b.title||'')+(b.author?' '+b.author:''))}&i=stripbooks`;
+    const amzUrl=`https://www.amazon.co.jp/s?k=${encodeURIComponent(b.title||'')}&i=stripbooks`;
     const tags=(b.tags||[]).map(t=>`<span class="tag tag-green">${t}</span>`).join('');
     const srcTag=b.format==='Kindle'?`<span class="tag tag-blue">Kindle</span>`:`<span class="tag tag-amber">Amazon</span>`;
     const rankClass=i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':'';
@@ -207,7 +207,7 @@ async function doResearch(){
 amazon_urlはタイトルと著者名でAmazon検索するURLを作成してください。
 
 JSONのみ返答（前置き・説明一切不要）:
-{"books":[{"title":"実在する正確なタイトル","author":"実在する著者名","format":"Amazon","price":"¥1540","rating":"4.2","reviews":"312","rank":"5","pages":"200","description":"実際の内容説明80文字","amazon_url":"https://www.amazon.co.jp/s?k=タイトル+著者名&i=stripbooks","tags":["タグ1","タグ2"]}],"insight":"このジャンルの市場トレンド80文字"}`;
+{"books":[{"title":"実在する正確なタイトル","author":"実在する著者名","format":"Amazon","price":"¥1540","rating":"4.2","reviews":"312","rank":"5","pages":"200","description":"実際の内容説明80文字","amazon_url":"https://www.amazon.co.jp/s?k=タイトルのみ&i=stripbooks","tags":["タグ1","タグ2"]}],"insight":"このジャンルの市場トレンド80文字"}`;
 
   try{
     const res=await fetch('https://api.anthropic.com/v1/messages',{
