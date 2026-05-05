@@ -545,8 +545,8 @@ async function doResearch() {
   document.getElementById('results').innerHTML = `<div class="state-box"><div class="icon">⏳</div><span class="loading-dots">リサーチ中</span></div>`;
   document.getElementById('memo-wrap').style.display = 'none';
 
-  const prompt = `キーワード「${kw}」に関連する日本の大人向け自己啓発・恋愛・男性向けライフスタイル本を8冊リストアップしてください。AmazonとKindleから4冊ずつ。JSONのみ返してください（説明文・前置き不要）:
-{"books":[{"title":"タイトル","author":"著者","source":"Amazon","price":"¥1,540","kindle":"¥880","rating":"4.2","reviews":"312件","rank":"15","pages":"200","hook":"核心コンセプト1行","target":"ターゲット読者","diff":"差別化ポイント","summary":"内容要点2文","tags":["タグ1","タグ2"]}],"insight":"市場トレンドと出版機会3文"}`;
+  const prompt = `キーワード「${kw}」関連の日本の大人向け自己啓発・恋愛・男性向け本を4冊。JSONのみ返答:
+{"books":[{"title":"タイトル","author":"著者","source":"Amazon","price":"1540円","kindle":"880円","rating":"4.2","reviews":"312件","rank":"15","pages":"200","hook":"1行","target":"対象","diff":"差別化","summary":"要点。","tags":["タグ1"]}],"insight":"トレンド。"}`;
 
   try {
     const res = await fetch('https://api.anthropic.com/v1/messages', {
@@ -559,7 +559,7 @@ async function doResearch() {
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
-        max_tokens: 2000,
+        max_tokens: 4000,
         messages: [{ role: 'user', content: prompt }]
       })
     });
