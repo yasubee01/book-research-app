@@ -68,6 +68,16 @@
   .memo-wrap textarea:focus{border-color:var(--amber);}
   .memo-wrap textarea::placeholder{color:var(--text3);}
   .key-saved{color:var(--green);font-size:12px;margin-top:6px;display:none;}
+  .medal-1{background:linear-gradient(135deg,#FFD700,#FFA500);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-size:22px;font-weight:700;}
+  .medal-2{color:#FF8C00;font-size:20px;font-weight:700;}
+  .medal-3{color:#FF69B4;font-size:18px;font-weight:700;}
+  .rank-1{border:2px solid #FFD700 !important;background:linear-gradient(135deg,#1a1400,#141414) !important;}
+  .rank-2{border:2px solid #FF8C00 !important;}
+  .rank-3{border:2px solid #FF69B4 !important;}
+  .rank-label-1{font-size:12px;font-weight:700;background:linear-gradient(135deg,#FFD700,#FFA500);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:6px;}
+  .rank-label-2{font-size:12px;font-weight:700;color:#FF8C00;margin-bottom:6px;}
+  .rank-label-3{font-size:12px;font-weight:700;color:#FF69B4;margin-bottom:6px;}
+
   .result-count{font-size:13px;color:var(--text2);margin-bottom:12px;}
 </style>
 </head>
@@ -148,8 +158,11 @@ function renderResults(books,insight){
     const amzUrl=b.amazon_url||`https://www.amazon.co.jp/s?k=${encodeURIComponent((b.title||'')+(b.author?' '+b.author:''))}&i=stripbooks`;
     const tags=(b.tags||[]).map(t=>`<span class="tag tag-green">${t}</span>`).join('');
     const srcTag=b.format==='Kindle'?`<span class="tag tag-blue">Kindle</span>`:`<span class="tag tag-amber">Amazon</span>`;
-    html+=`<div class="book-card">
-      <div class="book-num">No.${i+1}</div>
+    const rankClass=i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':'';
+    const medalHtml=i===0?`<div class="rank-label-1">👑 第1位 ランキングトップ！</div>`:i===1?`<div class="rank-label-2">🥈 第2位</div>`:i===2?`<div class="rank-label-3">🥉 第3位</div>`:'';
+    const numHtml=i===0?`<span class="medal-1">No.1</span>`:i===1?`<span class="medal-2">No.2</span>`:i===2?`<span class="medal-3">No.3</span>`:`<span style="color:var(--text3);font-size:11px;font-weight:700;">No.${i+1}</span>`;
+    html+=`<div class="book-card ${rankClass}">
+      <div class="book-num">${medalHtml}${numHtml}</div>
       <div class="book-title">${b.title||'タイトル不明'}</div>
       <div class="book-author">${b.author||'著者不明'}</div>
       <div class="book-stats">
@@ -185,7 +198,7 @@ async function doResearch(){
     </div>`;
   document.getElementById('memo-wrap').style.display='none';
 
-  const prompt=`日本のAmazonで「${kw}」に関連する実在する大人向け自己啓発・恋愛・男性向けライフスタイル本を10冊ウェブ検索してリストアップしてください。
+  const prompt=`日本のAmazonで「${kw}」に関連する実在する大人向け自己啓発・恋愛・男性向けライフスタイル本を15冊ウェブ検索してリストアップしてください。
 
 必ず実在する本のみを対象とし、以下をJSONで返してください。前置き・説明不要。
 {"books":[{"title":"正確なタイトル","author":"著者名","format":"Amazon","price":"¥1,540","rating":"4.3","reviews":"523","rank":"5","pages":"224","description":"内容説明200文字","amazon_url":"https://www.amazon.co.jp/dp/実際のASIN","tags":["タグ1","タグ2","タグ3"]}],"insight":"市場トレンドと出版機会200文字"}`;
