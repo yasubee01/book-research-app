@@ -6,392 +6,91 @@
 <title>書籍リサーチアプリ</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap');
-
   :root {
-    --bg: #0f0f0f;
-    --bg2: #1a1a1a;
-    --bg3: #242424;
-    --border: rgba(255,255,255,0.08);
-    --border2: rgba(255,255,255,0.15);
-    --text: #f0ede8;
-    --text2: #999;
-    --text3: #555;
-    --amber: #e8a135;
-    --amber-bg: rgba(232,161,53,0.1);
-    --blue: #4a9eff;
-    --blue-bg: rgba(74,158,255,0.1);
-    --green: #4caf7d;
-    --green-bg: rgba(76,175,125,0.1);
-    --red: #e85555;
+    --bg:#0a0a0a;--bg2:#141414;--bg3:#1e1e1e;
+    --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.14);
+    --text:#f0ede8;--text2:#9a9890;--text3:#4a4845;
+    --amber:#e8a135;--amber-bg:rgba(232,161,53,0.1);--amber-border:rgba(232,161,53,0.3);
+    --blue:#4a9eff;--blue-bg:rgba(74,158,255,0.1);
+    --green:#4caf7d;--green-bg:rgba(76,175,125,0.1);
+    --red:#e85555;--red-bg:rgba(232,85,85,0.1);
   }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    font-family: 'Noto Sans JP', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    padding: 24px 16px 60px;
-  }
-
-  header {
-    max-width: 720px;
-    margin: 0 auto 28px;
-  }
-
-  header h1 {
-    font-size: 22px;
-    font-weight: 700;
-    letter-spacing: -0.5px;
-    margin-bottom: 4px;
-  }
-
-  header p {
-    font-size: 13px;
-    color: var(--text2);
-  }
-
-  .container { max-width: 720px; margin: 0 auto; }
-
-  .search-row {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 12px;
-  }
-
-  input[type="text"] {
-    flex: 1;
-    background: var(--bg2);
-    border: 1px solid var(--border2);
-    border-radius: 10px;
-    color: var(--text);
-    font-family: inherit;
-    font-size: 14px;
-    padding: 12px 16px;
-    outline: none;
-    transition: border-color 0.2s;
-  }
-
-  input[type="text"]:focus { border-color: var(--amber); }
-  input[type="text"]::placeholder { color: var(--text3); }
-
-  button.search-btn {
-    background: var(--amber);
-    border: none;
-    border-radius: 10px;
-    color: #000;
-    cursor: pointer;
-    font-family: inherit;
-    font-size: 14px;
-    font-weight: 700;
-    padding: 12px 20px;
-    transition: opacity 0.2s, transform 0.1s;
-    white-space: nowrap;
-  }
-
-  button.search-btn:hover { opacity: 0.9; }
-  button.search-btn:active { transform: scale(0.97); }
-  button.search-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-  .chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-bottom: 20px;
-  }
-
-  .chip {
-    font-size: 12px;
-    padding: 5px 12px;
-    border-radius: 999px;
-    border: 1px solid var(--border2);
-    color: var(--text2);
-    cursor: pointer;
-    background: transparent;
-    font-family: inherit;
-    transition: all 0.15s;
-  }
-
-  .chip:hover { border-color: var(--amber); color: var(--amber); }
-  .chip.active { background: var(--amber-bg); border-color: var(--amber); color: var(--amber); }
-
-  .section-label {
-    font-size: 11px;
-    color: var(--text3);
-    font-weight: 500;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    margin-bottom: 8px;
-  }
-
-  .stats-row {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
-    margin-bottom: 14px;
-  }
-
-  .stat-card {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 12px;
-    text-align: center;
-  }
-
-  .stat-card .val { font-size: 20px; font-weight: 700; color: var(--amber); }
-  .stat-card .lbl { font-size: 11px; color: var(--text2); margin-top: 2px; }
-
-  .tabs {
-    display: flex;
-    gap: 6px;
-    margin-bottom: 14px;
-  }
-
-  .tab {
-    font-size: 12px;
-    padding: 6px 14px;
-    border-radius: 999px;
-    border: 1px solid var(--border2);
-    color: var(--text2);
-    cursor: pointer;
-    background: transparent;
-    font-family: inherit;
-    transition: all 0.15s;
-  }
-
-  .tab.active {
-    border-color: var(--amber);
-    color: var(--amber);
-    background: var(--amber-bg);
-  }
-
-  .insight-box {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-left: 3px solid var(--amber);
-    border-radius: 10px;
-    padding: 12px 16px;
-    margin-bottom: 14px;
-    font-size: 13px;
-    color: var(--text2);
-    line-height: 1.7;
-  }
-
-  .insight-box strong { color: var(--text); }
-
-  .book-card {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 16px;
-    margin-bottom: 10px;
-    transition: border-color 0.2s;
-  }
-
-  .book-card:hover { border-color: var(--border2); }
-
-  .book-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 8px;
-    margin-bottom: 4px;
-  }
-
-  .book-title { font-size: 14px; font-weight: 700; line-height: 1.4; }
-
-  .rank-badge {
-    font-size: 11px;
-    font-weight: 700;
-    padding: 2px 8px;
-    border-radius: 999px;
-    background: var(--amber-bg);
-    color: var(--amber);
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-
-  .book-meta {
-    font-size: 12px;
-    color: var(--text2);
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 10px;
-  }
-
-  .book-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    margin-bottom: 10px;
-  }
-
-  .field .lbl { font-size: 11px; color: var(--text3); margin-bottom: 2px; }
-  .field .val { font-size: 12px; color: var(--text2); line-height: 1.5; }
-
-  .book-summary {
-    font-size: 13px;
-    color: var(--text2);
-    line-height: 1.7;
-    border-top: 1px solid var(--border);
-    padding-top: 10px;
-    margin-top: 4px;
-    margin-bottom: 10px;
-  }
-
-  .book-footer {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    align-items: center;
-  }
-
-  .tag {
-    font-size: 11px;
-    padding: 3px 10px;
-    border-radius: 999px;
-  }
-
-  .tag-amber { background: var(--amber-bg); color: var(--amber); }
-  .tag-blue { background: var(--blue-bg); color: var(--blue); }
-  .tag-green { background: var(--green-bg); color: var(--green); }
-
-  .amz-btn {
-    margin-left: auto;
-    font-size: 12px;
-    font-weight: 700;
-    padding: 6px 14px;
-    border-radius: 999px;
-    background: var(--amber);
-    color: #000;
-    text-decoration: none;
-    transition: opacity 0.2s;
-    white-space: nowrap;
-  }
-
-  .amz-btn:hover { opacity: 0.85; }
-
-  .state-box {
-    text-align: center;
-    padding: 48px 20px;
-    color: var(--text3);
-    font-size: 14px;
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-  }
-
-  .state-box .icon { font-size: 32px; margin-bottom: 12px; }
-
-  .loading-dots::after {
-    content: '';
-    animation: dots 1.2s steps(4, end) infinite;
-  }
-
-  @keyframes dots {
-    0%   { content: ''; }
-    25%  { content: '.'; }
-    50%  { content: '..'; }
-    75%  { content: '...'; }
-    100% { content: ''; }
-  }
-
-  .memo-wrap { margin-top: 20px; }
-
-  textarea {
-    width: 100%;
-    background: var(--bg2);
-    border: 1px solid var(--border2);
-    border-radius: 10px;
-    color: var(--text);
-    font-family: inherit;
-    font-size: 13px;
-    padding: 12px 16px;
-    resize: vertical;
-    min-height: 80px;
-    outline: none;
-  }
-
-  textarea:focus { border-color: var(--amber); }
-  textarea::placeholder { color: var(--text3); }
-
-  .api-notice {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-left: 3px solid var(--blue);
-    border-radius: 10px;
-    padding: 12px 16px;
-    margin-bottom: 20px;
-    font-size: 12px;
-    color: var(--text2);
-    line-height: 1.7;
-  }
-
-  .api-notice a { color: var(--blue); }
-
-  .api-key-row {
-    display: flex;
-    gap: 8px;
-    margin-top: 8px;
-  }
-
-  .api-key-row input {
-    flex: 1;
-    font-size: 13px;
-    padding: 8px 12px;
-  }
-
-  .api-key-row button {
-    background: var(--blue);
-    border: none;
-    border-radius: 8px;
-    color: #fff;
-    cursor: pointer;
-    font-family: inherit;
-    font-size: 13px;
-    font-weight: 700;
-    padding: 8px 16px;
-    transition: opacity 0.2s;
-  }
-
-  .api-key-row button:hover { opacity: 0.85; }
-
-  .key-saved { color: var(--green); font-size: 12px; margin-top: 4px; display: none; }
-
-  @media (max-width: 480px) {
-    .stats-row { grid-template-columns: repeat(2, 1fr); }
-    .book-grid { grid-template-columns: 1fr; }
-  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:24px 16px 80px;}
+  header{max-width:760px;margin:0 auto 28px;padding-bottom:18px;border-bottom:1px solid var(--border);}
+  header h1{font-size:22px;font-weight:700;letter-spacing:-0.5px;margin-bottom:5px;}
+  header p{font-size:13px;color:var(--text2);}
+  .container{max-width:760px;margin:0 auto;}
+  .api-notice{background:var(--bg2);border:1px solid var(--border2);border-left:3px solid var(--blue);border-radius:12px;padding:14px 16px;margin-bottom:22px;font-size:13px;color:var(--text2);line-height:1.7;}
+  .api-notice a{color:var(--blue);text-decoration:none;}
+  .api-key-row{display:flex;gap:8px;margin-top:10px;}
+  input[type="text"],input[type="password"]{flex:1;background:var(--bg3);border:1px solid var(--border2);border-radius:10px;color:var(--text);font-family:inherit;font-size:14px;padding:11px 14px;outline:none;transition:border-color 0.2s;}
+  input:focus{border-color:var(--amber);}
+  input::placeholder{color:var(--text3);}
+  .btn-primary{background:var(--amber);border:none;border-radius:10px;color:#000;cursor:pointer;font-family:inherit;font-size:14px;font-weight:700;padding:11px 20px;transition:opacity 0.2s,transform 0.1s;white-space:nowrap;}
+  .btn-primary:hover{opacity:0.88;}
+  .btn-primary:active{transform:scale(0.97);}
+  .btn-primary:disabled{opacity:0.45;cursor:not-allowed;}
+  .section-label{font-size:11px;color:var(--text3);font-weight:500;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px;}
+  .search-row{display:flex;gap:8px;margin-bottom:12px;}
+  .search-row input{flex:1;}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:22px;}
+  .chip{font-size:12px;padding:5px 13px;border-radius:999px;border:1px solid var(--border2);color:var(--text2);cursor:pointer;background:transparent;font-family:inherit;transition:all 0.15s;}
+  .chip:hover{border-color:var(--amber);color:var(--amber);}
+  .chip.active{background:var(--amber-bg);border-color:var(--amber-border);color:var(--amber);}
+  .book-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:18px 20px;margin-bottom:12px;transition:border-color 0.2s,transform 0.15s;position:relative;overflow:hidden;}
+  .book-card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--amber);opacity:0;transition:opacity 0.2s;}
+  .book-card:hover{border-color:var(--border2);transform:translateY(-1px);}
+  .book-card:hover::before{opacity:1;}
+  .book-num{font-size:11px;color:var(--text3);font-weight:700;letter-spacing:0.1em;margin-bottom:5px;}
+  .book-title{font-size:16px;font-weight:700;line-height:1.4;margin-bottom:5px;}
+  .book-author{font-size:13px;color:var(--text2);margin-bottom:10px;}
+  .book-stats{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:12px;padding:10px 14px;background:var(--bg3);border-radius:8px;}
+  .stat{font-size:12px;color:var(--text2);}
+  .stat strong{color:var(--amber);font-weight:700;}
+  .book-desc{font-size:13px;color:var(--text2);line-height:1.75;margin-bottom:14px;}
+  .book-footer{display:flex;flex-wrap:wrap;gap:8px;align-items:center;}
+  .tag{font-size:11px;padding:3px 10px;border-radius:999px;}
+  .tag-amber{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-border);}
+  .tag-blue{background:var(--blue-bg);color:var(--blue);}
+  .tag-green{background:var(--green-bg);color:var(--green);}
+  .amz-btn{margin-left:auto;font-size:12px;font-weight:700;padding:8px 16px;border-radius:999px;background:var(--amber);color:#000;text-decoration:none;transition:opacity 0.2s;white-space:nowrap;display:inline-block;}
+  .amz-btn:hover{opacity:0.85;}
+  .insight-box{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--green);border-radius:12px;padding:14px 18px;margin-bottom:18px;font-size:13px;color:var(--text2);line-height:1.8;}
+  .insight-box strong{color:var(--text);}
+  .state-box{text-align:center;padding:56px 20px;color:var(--text3);font-size:14px;background:var(--bg2);border:1px dashed var(--border2);border-radius:14px;}
+  .state-box .icon{font-size:36px;margin-bottom:14px;}
+  .loading-bar{width:100%;height:2px;background:var(--border);border-radius:1px;margin:14px 0;overflow:hidden;}
+  .loading-bar-inner{height:100%;background:var(--amber);border-radius:1px;animation:load 1.5s ease-in-out infinite;}
+  @keyframes load{0%{width:0%;margin-left:0}50%{width:70%;margin-left:15%}100%{width:0%;margin-left:100%}}
+  .memo-wrap{margin-top:22px;}
+  .memo-wrap textarea{width:100%;background:var(--bg2);border:1px solid var(--border2);border-radius:12px;color:var(--text);font-family:inherit;font-size:13px;padding:14px 16px;resize:vertical;min-height:90px;outline:none;line-height:1.7;}
+  .memo-wrap textarea:focus{border-color:var(--amber);}
+  .memo-wrap textarea::placeholder{color:var(--text3);}
+  .key-saved{color:var(--green);font-size:12px;margin-top:6px;display:none;}
+  .result-count{font-size:13px;color:var(--text2);margin-bottom:12px;}
 </style>
 </head>
 <body>
-
 <header>
-  <h1>書籍リサーチアプリ</h1>
-  <p>Amazon・Kindle から大人向け自己啓発・恋愛・男性向けライフスタイル本をリサーチ</p>
+  <h1>📚 書籍リサーチアプリ</h1>
+  <p>ウェブ検索で実在する本を調査・Amazon直リンク付き</p>
 </header>
-
 <div class="container">
-
   <div class="api-notice">
-    <strong style="color:var(--text);">APIキーが必要です</strong><br>
-    <a href="https://console.anthropic.com/" target="_blank">console.anthropic.com</a> で無料取得 → 下に入力してください（端末に保存され外部送信はされません）
+    <strong style="color:var(--text);">Anthropic APIキーを入力してください</strong><br>
+    <a href="https://console.anthropic.com/" target="_blank" rel="noopener">console.anthropic.com</a> で取得 → 入力して保存（端末のみに保存）
     <div class="api-key-row">
       <input type="password" id="api-key-input" placeholder="sk-ant-..." />
-      <button onclick="saveKey()">保存</button>
+      <button class="btn-primary" onclick="saveKey()" style="padding:11px 16px;">保存</button>
     </div>
     <div class="key-saved" id="key-saved">✓ 保存されました</div>
   </div>
-
   <div class="section-label">キーワード検索</div>
   <div class="search-row">
-    <input type="text" id="keyword" placeholder="例: オナ禁 モテ 禁欲 恋愛..." />
-    <button class="search-btn" onclick="doResearch()" id="search-btn">リサーチ</button>
+    <input type="text" id="keyword" placeholder="例: オナ禁 モテ 禁欲 恋愛 40代..." />
+    <button class="btn-primary" onclick="doResearch()" id="search-btn">リサーチ</button>
   </div>
-
   <div class="section-label">クイック選択</div>
   <div class="chips">
     <button class="chip" onclick="setChip(this,'禁欲 自己管理 モテ')">禁欲×モテ</button>
@@ -401,189 +100,134 @@
     <button class="chip" onclick="setChip(this,'筋トレ メンタル 男磨き')">筋トレ×メンタル</button>
     <button class="chip" onclick="setChip(this,'40代 モテ 自己啓発')">40代モテ</button>
   </div>
-
   <div id="results">
     <div class="state-box">
       <div class="icon">🔍</div>
-      キーワードを入力してリサーチ開始
+      キーワードを入力してリサーチ開始<br>
+      <small style="font-size:12px;margin-top:8px;display:block;">ウェブ検索で実在する本を調査します</small>
     </div>
   </div>
-
   <div class="memo-wrap" id="memo-wrap" style="display:none;">
     <div class="section-label" style="margin-top:20px;">リサーチメモ</div>
     <textarea id="memo" placeholder="気になった本・企画アイデアをメモ..."></textarea>
   </div>
-
 </div>
-
 <script>
-let allBooks = [];
-let activeTab = 'all';
-
-function saveKey() {
-  const k = document.getElementById('api-key-input').value.trim();
-  if (!k) return;
-  localStorage.setItem('anthropic_key', k);
-  document.getElementById('key-saved').style.display = 'block';
-  setTimeout(() => document.getElementById('key-saved').style.display = 'none', 2000);
+function saveKey(){
+  const k=document.getElementById('api-key-input').value.trim();
+  if(!k)return;
+  localStorage.setItem('anthropic_key',k);
+  const el=document.getElementById('key-saved');
+  el.style.display='block';
+  setTimeout(()=>el.style.display='none',2500);
 }
-
-function getKey() {
-  return localStorage.getItem('anthropic_key') || '';
-}
-
-window.addEventListener('load', () => {
-  const k = getKey();
-  if (k) document.getElementById('api-key-input').value = k;
-  const memo = localStorage.getItem('research_memo');
-  if (memo) document.getElementById('memo').value = memo;
+function getKey(){return localStorage.getItem('anthropic_key')||'';}
+window.addEventListener('load',()=>{
+  const k=getKey();
+  if(k)document.getElementById('api-key-input').value=k;
+  const m=localStorage.getItem('research_memo');
+  if(m)document.getElementById('memo').value=m;
 });
-
-document.getElementById('memo').addEventListener('input', function() {
-  localStorage.setItem('research_memo', this.value);
+document.getElementById('memo').addEventListener('input',function(){
+  localStorage.setItem('research_memo',this.value);
 });
-
-function setChip(el, kw) {
-  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+function setChip(el,kw){
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
   el.classList.add('active');
-  document.getElementById('keyword').value = kw;
+  document.getElementById('keyword').value=kw;
 }
-
-function setTab(tab) {
-  activeTab = tab;
-  renderBooks();
-}
-
-function renderBooks() {
-  if (!allBooks.length) return;
-  const filtered = activeTab === 'all' ? allBooks
-    : allBooks.filter(b => activeTab === 'kindle' ? b.source === 'Kindle' : b.source === 'Amazon');
-
-  const kindleCount = allBooks.filter(b => b.source === 'Kindle').length;
-  const amazonCount = allBooks.filter(b => b.source === 'Amazon').length;
-  const ratings = allBooks.map(b => parseFloat(b.rating)||0).filter(r => r > 0);
-  const avgRating = ratings.length ? (ratings.reduce((s,r) => s+r,0)/ratings.length).toFixed(1) : '-';
-  const prices = allBooks.map(b => parseInt((b.price||'0').replace(/[^\d]/g,''))||0).filter(p => p > 0);
-  const avgPrice = prices.length ? Math.round(prices.reduce((s,p)=>s+p,0)/prices.length) : 0;
-
-  const resultsEl = document.getElementById('results');
-
-  let html = `<div class="stats-row">
-    <div class="stat-card"><div class="val">${allBooks.length}</div><div class="lbl">件</div></div>
-    <div class="stat-card"><div class="val">★${avgRating}</div><div class="lbl">平均評価</div></div>
-    <div class="stat-card"><div class="val">${avgPrice ? '¥'+avgPrice.toLocaleString() : '-'}</div><div class="lbl">平均価格</div></div>
-    <div class="stat-card"><div class="val">${kindleCount}冊</div><div class="lbl">Kindle対応</div></div>
-  </div>`;
-
-  if (window._insight) {
-    html += `<div class="insight-box"><strong>市場トレンド</strong><br>${window._insight}</div>`;
+function renderResults(books,insight){
+  let html='';
+  if(insight){
+    html+=`<div class="insight-box"><strong>市場トレンド・出版機会</strong><br>${insight}</div>`;
   }
-
-  html += `<div class="tabs">
-    <button class="tab ${activeTab==='all'?'active':''}" onclick="setTab('all')">全て (${allBooks.length})</button>
-    <button class="tab ${activeTab==='amazon'?'active':''}" onclick="setTab('amazon')">Amazon (${amazonCount})</button>
-    <button class="tab ${activeTab==='kindle'?'active':''}" onclick="setTab('kindle')">Kindle (${kindleCount})</button>
-  </div>`;
-
-  if (filtered.length === 0) {
-    html += `<div class="state-box"><div class="icon">📭</div>このカテゴリの本が見つかりませんでした</div>`;
+  if(books.length>0){
+    html+=`<div class="result-count">${books.length}冊見つかりました</div>`;
   }
-
-  filtered.forEach((b, i) => {
-    const srcTag = b.source === 'Kindle'
-      ? `<span class="tag tag-blue">Kindle</span>`
-      : `<span class="tag tag-amber">Amazon</span>`;
-    const tags = (b.tags||[]).map(t => `<span class="tag tag-green">${t}</span>`).join('');
-    const searchUrl = `https://www.amazon.co.jp/s?k=${encodeURIComponent(b.title||'')}&i=stripbooks&__mk_ja_JP=%E3%82%AB%E3%82%BF%E3%82%AB%E3%83%8A`;
-
-    html += `<div class="book-card">
-      <div class="book-head">
-        <div class="book-title">${i+1}. ${b.title||'タイトル不明'}</div>
-        ${b.rank ? `<span class="rank-badge">${b.rank}位</span>` : ''}
+  books.forEach((b,i)=>{
+    const amzUrl=b.amazon_url||`https://www.amazon.co.jp/s?k=${encodeURIComponent((b.title||'')+(b.author?' '+b.author:''))}&i=stripbooks`;
+    const tags=(b.tags||[]).map(t=>`<span class="tag tag-green">${t}</span>`).join('');
+    const srcTag=b.format==='Kindle'?`<span class="tag tag-blue">Kindle</span>`:`<span class="tag tag-amber">Amazon</span>`;
+    html+=`<div class="book-card">
+      <div class="book-num">No.${i+1}</div>
+      <div class="book-title">${b.title||'タイトル不明'}</div>
+      <div class="book-author">${b.author||'著者不明'}</div>
+      <div class="book-stats">
+        <div class="stat">価格 <strong>${b.price||'—'}</strong></div>
+        <div class="stat">評価 <strong>★${b.rating||'—'}</strong></div>
+        <div class="stat">レビュー <strong>${b.reviews||'—'}件</strong></div>
+        ${b.rank?`<div class="stat">ランキング <strong>${b.rank}位</strong></div>`:''}
+        ${b.pages?`<div class="stat">ページ数 <strong>${b.pages}p</strong></div>`:''}
       </div>
-      <div class="book-meta">
-        <span>${b.author||'著者不明'}</span>
-        <span>★${b.rating||'-'}（${b.reviews||'0'}件）</span>
-        <span>紙 ${b.price||'-'} / Kindle ${b.kindle||'-'}</span>
-      </div>
-      <div class="book-grid">
-        <div class="field"><div class="lbl">フック</div><div class="val">${b.hook||'-'}</div></div>
-        <div class="field"><div class="lbl">対象読者</div><div class="val">${b.target||'-'}</div></div>
-        <div class="field"><div class="lbl">差別化</div><div class="val">${b.diff||b.selling_point||'-'}</div></div>
-        <div class="field"><div class="lbl">ページ数</div><div class="val">${b.pages||'-'}ページ</div></div>
-      </div>
-      <div class="book-summary">${b.summary||''}</div>
+      <div class="book-desc">${b.description||''}</div>
       <div class="book-footer">
         ${srcTag}${tags}
-        <a class="amz-btn" href="${searchUrl}" target="_blank" rel="noopener">Amazon で見る →</a>
+        <a class="amz-btn" href="${amzUrl}" target="_blank" rel="noopener">Amazonで見る →</a>
       </div>
     </div>`;
   });
-
-  resultsEl.innerHTML = html;
-  document.getElementById('memo-wrap').style.display = 'block';
+  document.getElementById('results').innerHTML=html;
+  document.getElementById('memo-wrap').style.display='block';
 }
+async function doResearch(){
+  const kw=document.getElementById('keyword').value.trim();
+  if(!kw)return;
+  const key=getKey();
+  if(!key){alert('APIキーを入力して保存してください');return;}
+  const btn=document.getElementById('search-btn');
+  btn.disabled=true;btn.textContent='検索中...';
+  document.getElementById('results').innerHTML=`
+    <div class="state-box">
+      <div class="icon">🔍</div>
+      <div>ウェブ検索で実在する本を調査中...</div>
+      <div class="loading-bar"><div class="loading-bar-inner"></div></div>
+      <small style="font-size:12px;color:var(--text3);">Amazon・Kindleの実際のデータを取得中</small>
+    </div>`;
+  document.getElementById('memo-wrap').style.display='none';
 
-async function doResearch() {
-  const kw = document.getElementById('keyword').value.trim();
-  if (!kw) return;
+  const prompt=`日本のAmazonで「${kw}」に関連する実在する大人向け自己啓発・恋愛・男性向けライフスタイル本を10冊ウェブ検索してリストアップしてください。
 
-  const key = getKey();
-  if (!key) {
-    alert('APIキーを入力して保存してください');
-    return;
-  }
+必ず実在する本のみを対象とし、以下をJSONで返してください。前置き・説明不要。
+{"books":[{"title":"正確なタイトル","author":"著者名","format":"Amazon","price":"¥1,540","rating":"4.3","reviews":"523","rank":"5","pages":"224","description":"内容説明200文字","amazon_url":"https://www.amazon.co.jp/dp/実際のASIN","tags":["タグ1","タグ2","タグ3"]}],"insight":"市場トレンドと出版機会200文字"}`;
 
-  allBooks = [];
-  activeTab = 'all';
-  window._insight = '';
-
-  const btn = document.getElementById('search-btn');
-  btn.disabled = true;
-  btn.textContent = 'リサーチ中';
-
-  document.getElementById('results').innerHTML = `<div class="state-box"><div class="icon">⏳</div><span class="loading-dots">リサーチ中</span></div>`;
-  document.getElementById('memo-wrap').style.display = 'none';
-
-  const prompt = `キーワード「${kw}」関連の日本の大人向け自己啓発・恋愛・男性向け本を10冊リストアップ。AmazonとKindleから5冊ずつ。JSONのみ返答（前置き・説明不要）:
-{"books":[{"title":"タイトル","author":"著者","source":"Amazon","asin":"B0XXXXXXXX","price":"1540円","kindle":"880円","rating":"4.2","reviews":"312件","rank":"15","pages":"200","hook":"1行","target":"対象","diff":"差別化","summary":"要点2文","tags":["タグ1","タグ2"]}],"insight":"市場トレンド2文"}`;
-
-  try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': key,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'x-api-key':key,
+        'anthropic-version':'2023-06-01',
+        'anthropic-dangerous-direct-browser-access':'true'
       },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
-        max_tokens: 4000,
-        messages: [{ role: 'user', content: prompt }]
+      body:JSON.stringify({
+        model:'claude-sonnet-4-6',
+        max_tokens:4000,
+        tools:[{type:"web_search_20250305",name:"web_search"}],
+        messages:[{role:'user',content:prompt}]
       })
     });
-
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
-    const text = (data.content||[]).map(c => c.text||'').join('');
-    const match = text.match(/\{[\s\S]*\}/);
-    if (!match) throw new Error('JSONが見つかりません');
-    const parsed = JSON.parse(match[0]);
-    allBooks = parsed.books || [];
-    window._insight = parsed.insight || '';
-    renderBooks();
-  } catch(e) {
-    document.getElementById('results').innerHTML = `<div class="state-box" style="border-left:3px solid var(--red);"><div class="icon">⚠️</div>エラー: ${e.message}<br><small style="color:var(--text3);margin-top:8px;display:block;">APIキーを確認して再試行してください</small></div>`;
-  } finally {
-    btn.disabled = false;
-    btn.textContent = 'リサーチ';
+    if(!res.ok){const e=await res.json();throw new Error(e.error?.message||`HTTP ${res.status}`);}
+    const data=await res.json();
+    const textBlocks=(data.content||[]).filter(c=>c.type==='text').map(c=>c.text).join('');
+    const match=textBlocks.match(/\{[\s\S]*\}/);
+    if(!match)throw new Error('データの取得に失敗しました');
+    const parsed=JSON.parse(match[0]);
+    const books=parsed.books||[];
+    if(books.length===0)throw new Error('本が見つかりませんでした。キーワードを変えてください。');
+    renderResults(books,parsed.insight||'');
+  }catch(e){
+    document.getElementById('results').innerHTML=`
+      <div class="state-box" style="border-color:var(--red);border-style:solid;">
+        <div class="icon">⚠️</div>
+        <div style="color:var(--red);font-weight:700;margin-bottom:8px;">エラーが発生しました</div>
+        <div style="font-size:13px;">${e.message}</div>
+        <div style="font-size:12px;color:var(--text3);margin-top:8px;">APIキーを確認して再試行してください</div>
+      </div>`;
+  }finally{
+    btn.disabled=false;btn.textContent='リサーチ';
   }
 }
-
-document.getElementById('keyword').addEventListener('keydown', e => {
-  if (e.key === 'Enter') doResearch();
-});
+document.getElementById('keyword').addEventListener('keydown',e=>{if(e.key==='Enter')doResearch();});
 </script>
 </body>
 </html>
