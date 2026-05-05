@@ -198,7 +198,7 @@ async function doResearch(){
     </div>`;
   document.getElementById('memo-wrap').style.display='none';
 
-  const prompt=`日本のAmazonで「${kw}」に関連する実在する大人向け自己啓発・恋愛・男性向けライフスタイル本を15冊ウェブ検索してリストアップしてください。
+  const prompt=`日本のAmazonで「${kw}」に関連する実在する大人向け自己啓発・恋愛・男性向けライフスタイル本を8冊ウェブ検索してリストアップしてください。
 
 必ず実在する本のみを対象とし、以下をJSONで返してください。前置き・説明不要。
 {"books":[{"title":"正確なタイトル","author":"著者名","format":"Amazon","price":"¥1,540","rating":"4.3","reviews":"523","rank":"5","pages":"224","description":"内容説明200文字","amazon_url":"https://www.amazon.co.jp/dp/実際のASIN","tags":["タグ1","タグ2","タグ3"]}],"insight":"市場トレンドと出版機会200文字"}`;
@@ -214,7 +214,7 @@ async function doResearch(){
       },
       body:JSON.stringify({
         model:'claude-sonnet-4-6',
-        max_tokens:4000,
+        max_tokens:6000,
         tools:[{type:"web_search_20250305",name:"web_search"}],
         messages:[{role:'user',content:prompt}]
       })
