@@ -1,82 +1,345 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <title>KDP楽天リサーチツール</title>
-    <style>
-        body { font-family: sans-serif; max-width: 600px; margin: 20px auto; padding: 20px; line-height: 1.6; }
-        .config { background: #f4f4f4; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
-        input { width: 100%; padding: 8px; margin: 5px 0 15px; border: 1px solid #ccc; }
-        button { background: #bf0000; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; width: 100%; font-weight: bold; }
-        button:hover { background: #a00000; }
-        .result-card { border: 1px solid #ddd; padding: 15px; margin-top: 15px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; }
-        .affiliate-btn { background: #007bff; color: white; text-decoration: none; padding: 8px 12px; border-radius: 4px; font-size: 14px; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KDP書籍リサーチツール</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap');
+:root{
+  --bg:#0a0a0a;--bg2:#141414;--bg3:#1e1e1e;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.14);
+  --text:#f0ede8;--text2:#9a9890;--text3:#4a4845;
+  --amber:#e8a135;--amber-bg:rgba(232,161,53,0.12);--amber-border:rgba(232,161,53,0.3);
+  --blue:#4a9eff;--blue-bg:rgba(74,158,255,0.1);
+  --green:#4caf7d;--green-bg:rgba(76,175,125,0.1);
+  --red:#e85555;
+  --gold:#FFD700;--silver:#C0C0C0;--bronze:#CD7F32;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+.nav{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 20px;display:flex;align-items:center;justify-content:space-between;height:56px;position:sticky;top:0;z-index:100;}
+.nav-title{font-size:15px;font-weight:700;color:var(--amber);}
+.nav-tabs{display:flex;gap:4px;}
+.nav-tab{font-size:12px;padding:6px 14px;border-radius:999px;border:none;cursor:pointer;font-family:inherit;font-weight:500;transition:all 0.15s;background:transparent;color:var(--text2);}
+.nav-tab.active{background:var(--amber);color:#000;}
+.page{display:none;padding:20px 16px 80px;max-width:780px;margin:0 auto;}
+.page.active{display:block;}
+.slabel{font-size:11px;color:var(--text3);font-weight:500;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px;}
+input[type="text"],input[type="password"]{background:var(--bg3);border:1px solid var(--border2);border-radius:10px;color:var(--text);font-family:inherit;font-size:14px;padding:11px 14px;outline:none;transition:border-color 0.2s;width:100%;}
+input:focus{border-color:var(--amber);}
+input::placeholder{color:var(--text3);}
+textarea{background:var(--bg3);border:1px solid var(--border2);border-radius:10px;color:var(--text);font-family:inherit;font-size:13px;padding:11px 14px;outline:none;width:100%;min-height:120px;resize:vertical;line-height:1.7;}
+textarea:focus{border-color:var(--amber);}
+.btn{border:none;border-radius:10px;cursor:pointer;font-family:inherit;font-weight:700;padding:11px 20px;transition:all 0.15s;font-size:14px;white-space:nowrap;}
+.btn-amber{background:var(--amber);color:#000;}
+.btn-amber:hover{opacity:0.88;}
+.btn-amber:disabled{opacity:0.45;cursor:not-allowed;}
+.btn-blue{background:var(--blue);color:#fff;}
+.btn-blue:hover{opacity:0.88;}
+.btn-green{background:var(--green);color:#fff;}
+.btn-green:hover{opacity:0.88;}
+.btn-outline{background:transparent;border:1px solid var(--border2);color:var(--text2);}
+.btn-outline:hover{border-color:var(--amber);color:var(--amber);}
+.btn-sm{padding:7px 14px;font-size:12px;border-radius:8px;}
+.search-row{display:flex;gap:8px;margin-bottom:12px;}
+.search-row input{flex:1;}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px;}
+.chip{font-size:12px;padding:5px 13px;border-radius:999px;border:1px solid var(--border2);color:var(--text2);cursor:pointer;background:transparent;font-family:inherit;transition:all 0.15s;}
+.chip:hover{border-color:var(--amber);color:var(--amber);}
+.chip.active{background:var(--amber-bg);border-color:var(--amber-border);color:var(--amber);}
+.god-btns{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:20px;}
+.god-btn{background:var(--bg2);border:1px solid var(--border2);border-radius:12px;padding:14px 10px;text-align:center;cursor:pointer;transition:all 0.15s;font-family:inherit;}
+.god-btn:hover{border-color:var(--amber);background:var(--amber-bg);}
+.god-btn .icon{font-size:24px;margin-bottom:6px;}
+.god-btn .label{font-size:12px;font-weight:700;color:var(--text);}
+.god-btn .desc{font-size:10px;color:var(--text2);margin-top:3px;}
+.book-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:16px 18px;margin-bottom:10px;transition:border-color 0.2s;}
+.book-card:hover{border-color:var(--border2);}
+.book-card.rank-1{border:2px solid var(--gold);background:linear-gradient(135deg,#1a1400,var(--bg2));}
+.book-card.rank-2{border:2px solid var(--silver);}
+.book-card.rank-3{border:2px solid var(--bronze);}
+.rank-label{font-size:12px;font-weight:700;margin-bottom:5px;}
+.rank-label.r1{color:var(--gold);}
+.rank-label.r2{color:var(--silver);}
+.rank-label.r3{color:var(--bronze);}
+.book-title{font-size:15px;font-weight:700;line-height:1.4;margin-bottom:4px;}
+.book-author{font-size:13px;color:var(--text2);margin-bottom:10px;}
+.book-stats{display:flex;flex-wrap:wrap;gap:12px;padding:10px 14px;background:var(--bg3);border-radius:8px;margin-bottom:10px;}
+.bstat{font-size:12px;color:var(--text2);}
+.bstat strong{color:var(--amber);font-weight:700;}
+.book-desc{font-size:13px;color:var(--text2);line-height:1.75;margin-bottom:12px;}
+.book-footer{display:flex;flex-wrap:wrap;gap:6px;align-items:center;}
+.tag{font-size:11px;padding:3px 10px;border-radius:999px;}
+.tag-amber{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-border);}
+.tag-green{background:var(--green-bg);color:var(--green);}
+.rak-btn{margin-left:auto;font-size:12px;font-weight:700;padding:8px 16px;border-radius:999px;background:#bf0000;color:#fff;text-decoration:none;transition:opacity 0.2s;white-space:nowrap;display:inline-block;}
+.rak-btn:hover{opacity:0.85;}
+.insight-box{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--green);border-radius:12px;padding:14px 18px;margin-bottom:16px;font-size:13px;color:var(--text2);line-height:1.8;}
+.insight-box strong{color:var(--text);}
+.state-box{text-align:center;padding:56px 20px;color:var(--text3);font-size:14px;background:var(--bg2);border:1px dashed var(--border2);border-radius:14px;}
+.state-box .icon{font-size:36px;margin-bottom:14px;}
+.loading-bar{width:100%;height:2px;background:var(--border);border-radius:1px;margin:14px 0;overflow:hidden;}
+.loading-bar-inner{height:100%;background:var(--amber);animation:load 1.5s ease-in-out infinite;}
+@keyframes load{0%{width:0%;margin-left:0}50%{width:70%;margin-left:15%}100%{width:0%;margin-left:100%}}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:18px 20px;margin-bottom:12px;}
+.settings-group{margin-bottom:18px;}
+.settings-group label{font-size:13px;color:var(--text2);display:block;margin-bottom:6px;}
+.settings-row{display:flex;gap:8px;}
+.settings-row input{flex:1;}
+.saved-badge{display:none;font-size:12px;color:var(--green);margin-top:6px;}
+.info-box{background:var(--blue-bg);border:1px solid rgba(74,158,255,0.2);border-radius:10px;padding:12px 14px;font-size:12px;color:var(--text2);line-height:1.7;margin-bottom:16px;}
+.info-box a{color:var(--blue);text-decoration:none;}
+.output-area{background:var(--bg3);border:1px solid var(--border2);border-radius:10px;padding:14px 16px;font-size:13px;color:var(--text2);line-height:1.8;white-space:pre-wrap;min-height:100px;}
+.kdp-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;}
+@media(max-width:480px){.god-btns{grid-template-columns:1fr 1fr;}.book-stats{flex-direction:column;gap:6px;}.kdp-btns{grid-template-columns:1fr;}}
+</style>
 </head>
 <body>
+<nav class="nav">
+  <div class="nav-title">📚 KDP書籍リサーチツール</div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showPage('research')">リサーチ</button>
+    <button class="nav-tab" onclick="showPage('kdp')">KDP支援</button>
+    <button class="nav-tab" onclick="showPage('settings')">設定</button>
+  </div>
+</nav>
 
-    <h2>📚 KDP楽天リサーチツール</h2>
-    
-    <div class="config">
-        <strong>設定（LocalStorageに保存されます）</strong>
-        <label>もしも a_id: <input type="text" id="a_id" value="5537036"></label>
-        <label>もしも s_id: <input type="text" id="s_id" placeholder="ソースコードから抜き出したs_idを入力"></label>
-        <button onclick="saveConfig()">設定を保存</button>
+<!-- リサーチページ -->
+<div id="page-research" class="page active">
+  <div style="margin-bottom:20px;">
+    <div class="slabel">3つの神ボタン</div>
+    <div class="god-btns">
+      <button class="god-btn" onclick="showPage('research')">
+        <div class="icon">🔍</div>
+        <div class="label">市場リサーチ</div>
+        <div class="desc">ライバル本を即調査</div>
+      </button>
+      <button class="god-btn" onclick="showPage('kdp')">
+        <div class="icon">📝</div>
+        <div class="label">KDP構成案</div>
+        <div class="desc">目次・タイトルを生成</div>
+      </button>
+      <button class="god-btn" onclick="showPage('settings')">
+        <div class="icon">⚙️</div>
+        <div class="label">ID設定</div>
+        <div class="desc">APIキー設定</div>
+      </button>
     </div>
-
-    <div class="search-section">
-        <label>リサーチしたいキーワード:</label>
-        <input type="text" id="keyword" placeholder="例：江戸時代 雑学">
-        <button onclick="generateLinks()">楽天ブックスでリンク生成</button>
+  </div>
+  <div class="slabel">キーワード検索</div>
+  <div class="search-row">
+    <input type="text" id="keyword" placeholder="例: オナ禁 モテ 禁欲 恋愛 40代..." />
+    <button class="btn btn-amber" onclick="doResearch()" id="search-btn">リサーチ</button>
+  </div>
+  <div class="slabel">クイック選択</div>
+  <div class="chips">
+    <button class="chip" onclick="setChip(this,'禁欲 自己管理 モテ')">禁欲×モテ</button>
+    <button class="chip" onclick="setChip(this,'オナ禁 ドーパミン 習慣')">オナ禁・ドーパミン</button>
+    <button class="chip" onclick="setChip(this,'恋愛 口説き 異性')">恋愛・口説き方</button>
+    <button class="chip" onclick="setChip(this,'セフレ 男女関係 大人')">男女関係</button>
+    <button class="chip" onclick="setChip(this,'筋トレ メンタル 男磨き')">筋トレ×メンタル</button>
+    <button class="chip" onclick="setChip(this,'40代 モテ 自己啓発')">40代モテ</button>
+  </div>
+  <div id="results">
+    <div class="state-box">
+      <div class="icon">🔍</div>
+      キーワードを入力してリサーチ開始<br>
+      <small style="font-size:12px;margin-top:8px;display:block;">楽天ブックスリンク付きで表示</small>
     </div>
+  </div>
+</div>
 
-    <div id="results"></div>
+<!-- KDP支援ページ -->
+<div id="page-kdp" class="page">
+  <div class="slabel">テーマ・ジャンルを入力</div>
+  <div class="search-row" style="margin-bottom:16px;">
+    <input type="text" id="kdp-theme" placeholder="例: 40代男性 禁欲 モテ..." />
+  </div>
+  <div class="kdp-btns">
+    <button class="btn btn-amber" onclick="genTitles()">📚 タイトル案10個</button>
+    <button class="btn btn-blue" onclick="genTOC()">📋 目次構成案</button>
+    <button class="btn btn-green" onclick="genIntro()">✍️ 冒頭文を作成</button>
+    <button class="btn btn-outline" onclick="genMarketing()">📣 販売文を作成</button>
+  </div>
+  <div id="kdp-output">
+    <div class="state-box">
+      <div class="icon">📝</div>
+      テーマを入力してボタンを押してください
+    </div>
+  </div>
+</div>
 
-    <script>
-        // 設定の保存
-        function saveConfig() {
-            localStorage.setItem('moshimo_a_id', document.getElementById('a_id').value);
-            localStorage.setItem('moshimo_s_id', document.getElementById('s_id').value);
-            alert("設定を保存しました！");
-        }
+<!-- 設定ページ -->
+<div id="page-settings" class="page">
+  <div class="info-box">
+    <strong style="color:var(--text);">初期設定ガイド</strong><br>
+    <a href="https://console.anthropic.com/settings/keys" target="_blank">Anthropic Console</a> でAPIキーを取得して入力してください
+  </div>
+  <div class="settings-group">
+    <label>🔑 Claude APIキー</label>
+    <div class="settings-row">
+      <input type="password" id="set-apikey" placeholder="sk-ant-..." />
+      <button class="btn btn-amber btn-sm" onclick="saveSettings()">保存</button>
+    </div>
+    <div class="saved-badge" id="saved-badge">✓ 保存されました</div>
+  </div>
+  <div class="card">
+    <div class="slabel">設定状況</div>
+    <div id="settings-status" style="font-size:13px;color:var(--text2);line-height:2;"></div>
+  </div>
+  <div class="card" style="margin-top:8px;background:var(--amber-bg);border-color:var(--amber-border);">
+    <div style="font-size:13px;color:var(--text2);line-height:1.8;">
+      <strong style="color:var(--amber);">💰 収益の仕組み</strong><br>
+      「楽天で見る」ボタンにあなたのIDが自動で入ります。<br>
+      購入されるたびに報酬が発生！
+    </div>
+  </div>
+</div>
 
-        // ページ読み込み時に設定を復元
-        window.onload = function() {
-            if(localStorage.getItem('moshimo_a_id')) document.getElementById('a_id').value = localStorage.getItem('moshimo_a_id');
-            if(localStorage.getItem('moshimo_s_id')) document.getElementById('s_id').value = localStorage.getItem('moshimo_s_id');
-        }
+<script>
+// ページ切替
+function showPage(name){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  const idx={research:0,kdp:1,settings:2};
+  document.querySelectorAll('.nav-tab')[idx[name]].classList.add('active');
+}
 
-        // リンク生成ロジック
-        function generateLinks() {
-            const keyword = document.getElementById('keyword').value;
-            const a_id = localStorage.getItem('moshimo_a_id');
-            const s_id = localStorage.getItem('moshimo_s_id');
+// 設定
+function saveSettings(){
+  const s={apiKey:document.getElementById('set-apikey').value.trim()};
+  localStorage.setItem('kdp_settings',JSON.stringify(s));
+  const b=document.getElementById('saved-badge');
+  b.style.display='block';
+  setTimeout(()=>b.style.display='none',2500);
+  updateStatus();
+}
 
-            if (!keyword || !s_id) {
-                alert("キーワードとs_idを入力してください");
-                return;
-            }
+function getSettings(){
+  try{return JSON.parse(localStorage.getItem('kdp_settings'))||{};}
+  catch{return {};}
+}
 
-            const resultsDiv = document.getElementById('results');
-            resultsDiv.innerHTML = "<h3>リサーチ結果</h3>";
+function updateStatus(){
+  const s=getSettings();
+  const el=document.getElementById('settings-status');
+  if(!el)return;
+  el.innerHTML=`APIキー: ${s.apiKey?'<span style="color:var(--green)">✓ 設定済み</span>':'<span style="color:var(--red)">✗ 未設定</span>'}`;
+}
 
-            // 本来はここをAIがやりますが、今回は単体動作のため直接リンクを生成
-            const encodedKeyword = encodeURIComponent(keyword);
-            
-            // 楽天用URL合成（p_id=54, pc_id=54）
-            const affiliateUrl = `https://af.moshimo.com/af/c/click?a_id=${a_id}&p_id=54&pc_id=54&s_id=${s_id}&url=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F${encodedKeyword}`;
+window.addEventListener('load',()=>{
+  const s=getSettings();
+  if(s.apiKey)document.getElementById('set-apikey').value=s.apiKey;
+  updateStatus();
+});
 
-            const card = `
-                <div class="result-card">
-                    <div>
-                        <strong>キーワード: ${keyword}</strong><br>
-                        <small>楽天ブックスの検索結果へ飛びます</small>
-                    </div>
-                    <a href="${affiliateUrl}" target="_blank" class="affiliate-btn">楽天で市場調査</a>
-                </div>
-            `;
-            resultsDiv.innerHTML += card;
-        }
-    </script>
+// 楽天リンク生成
+function rakutenLink(title){
+  const enc=encodeURIComponent(title);
+  return 'https://af.moshimo.com/af/c/click?a_id=5537036&p_id=54&pc_id=54&s_id=1506048&url=https%3A%2F%2Fsearch.books.rakuten.co.jp%2Fbksearch%2Fsearch%3Fkeyword%3D'+enc;
+}
+
+function setChip(el,kw){
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('keyword').value=kw;
+}
+
+// API呼び出し
+async function callClaude(prompt){
+  const s=getSettings();
+  if(!s.apiKey)throw new Error('APIキーが未設定です。設定タブで入力してください。');
+  const res=await fetch('https://api.anthropic.com/v1/messages',{
+    method:'POST',
+    headers:{
+      'Content-Type':'application/json',
+      'x-api-key':s.apiKey,
+      'anthropic-version':'2023-06-01',
+      'anthropic-dangerous-direct-browser-access':'true'
+    },
+    body:JSON.stringify({
+      model:'claude-haiku-4-5-20251001',
+      max_tokens:2000,
+      messages:[{role:'user',content:prompt}]
+    })
+  });
+  if(!res.ok){const e=await res.json();throw new Error(e.error?.message||'HTTP '+res.status);}
+  const data=await res.json();
+  return (data.content||[]).filter(c=>c.type==='text').map(c=>c.text).join('');
+}
+
+// リサーチ
+async function doResearch(){
+  const kw=document.getElementById('keyword').value.trim();
+  if(!kw)return;
+  const btn=document.getElementById('search-btn');
+  btn.disabled=true;btn.textContent='検索中...';
+  document.getElementById('results').innerHTML='<div class="state-box"><div class="icon">🔍</div><div>リサーチ中...</div><div class="loading-bar"><div class="loading-bar-inner"></div></div></div>';
+
+  try{
+    const text=await callClaude(`「${kw}」というジャンルの日本のAmazon・Kindle本を8冊リストアップしてください。知っている本を優先。以下のJSON形式のみで返答:
+{"books":[{"title":"タイトル","author":"著者名","format":"Amazon","price":"¥1540","rating":"4.2","reviews":"312","rank":"5","pages":"200","description":"内容80文字","tags":["タグ1","タグ2"]}],"insight":"出版機会80文字"}`);
+
+    const match=text.match(/\{[\s\S]*\}/);
+    if(!match)throw new Error('レスポンスエラー。もう一度試してください。');
+    const parsed=JSON.parse(match[0]);
+    const books=parsed.books||[];
+    if(!books.length)throw new Error('本が見つかりませんでした。キーワードを変えてください。');
+
+    let html='';
+    if(parsed.insight)html+=`<div class="insight-box"><strong>出版機会</strong><br>${parsed.insight}</div>`;
+    html+=`<div style="font-size:13px;color:var(--text2);margin-bottom:12px;">${books.length}冊見つかりました</div>`;
+
+    books.forEach((b,i)=>{
+      const rc=i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':'';
+      const rl=i===0?'<div class="rank-label r1">👑 第1位</div>':i===1?'<div class="rank-label r2">🥈 第2位</div>':i===2?'<div class="rank-label r3">🥉 第3位</div>':'';
+      const tags=(b.tags||[]).map(t=>`<span class="tag tag-green">${t}</span>`).join('');
+      const rUrl=rakutenLink(b.title);
+      html+=`<div class="book-card ${rc}">
+        ${rl}
+        <div class="book-title">${b.title||'タイトル不明'}</div>
+        <div class="book-author">${b.author||'著者不明'}</div>
+        <div class="book-stats">
+          <div class="bstat">価格 <strong>${b.price||'—'}</strong></div>
+          <div class="bstat">評価 <strong>★${b.rating||'—'}</strong></div>
+          <div class="bstat">レビュー <strong>${b.reviews||'—'}件</strong></div>
+          ${b.rank?`<div class="bstat">ランク <strong>${b.rank}位</strong></div>`:''}
+          ${b.pages?`<div class="bstat">ページ <strong>${b.pages}p</strong></div>`:''}
+        </div>
+        <div class="book-desc">${b.description||''}</div>
+        <div class="book-footer">${tags}<a class="rak-btn" href="${rUrl}" target="_blank" rel="noopener">楽天で見る →</a></div>
+      </div>`;
+    });
+    document.getElementById('results').innerHTML=html;
+  }catch(e){
+    document.getElementById('results').innerHTML=`<div class="state-box" style="border-color:var(--red);border-style:solid;"><div class="icon">⚠️</div><div style="color:var(--red);font-weight:700;">エラー</div><div style="font-size:13px;margin-top:8px;">${e.message}</div></div>`;
+  }finally{
+    btn.disabled=false;btn.textContent='リサーチ';
+  }
+}
+
+// KDP支援
+async function kdpAction(prompt,msg){
+  const theme=document.getElementById('kdp-theme').value.trim();
+  if(!theme){alert('テーマを入力してください');return;}
+  document.getElementById('kdp-output').innerHTML=`<div class="state-box"><div class="icon">✍️</div><div>${msg}</div><div class="loading-bar"><div class="loading-bar-inner"></div></div></div>`;
+  try{
+    const text=await callClaude(prompt.replace('{{t}}',theme));
+    document.getElementById('kdp-output').innerHTML=`<div class="output-area">${text}</div><button class="btn btn-outline btn-sm" style="margin-top:8px;" onclick="navigator.clipboard.writeText(document.querySelector('.output-area').textContent).then(()=>alert('コピーしました！'))">コピー</button>`;
+  }catch(e){
+    document.getElementById('kdp-output').innerHTML=`<div class="state-box" style="border-color:var(--red);border-style:solid;"><div class="icon">⚠️</div><div style="color:var(--red);">${e.message}</div></div>`;
+  }
+}
+
+function genTitles(){kdpAction('「{{t}}」ジャンルでKindleで売れる本のタイトル案を10個。40代男性向け・大人向け自己啓発・恋愛系。番号付きで。','タイトル案生成中...');}
+function genTOC(){kdpAction('「{{t}}」テーマのKindle本の目次を1章〜5章、各章に小見出し3つ付きで作成してください。','目次生成中...');}
+function genIntro(){kdpAction('「{{t}}」テーマのKindle本の冒頭文（プロローグ）を500文字程度で。読者を引き込む書き出しで。','冒頭文生成中...');}
+function genMarketing(){kdpAction('「{{t}}」テーマのKindle本のAmazon商品説明文を300文字程度で。ターゲット・得られること・CTAを含めて。','販売文生成中...');}
+
+document.getElementById('keyword').addEventListener('keydown',e=>{if(e.key==='Enter')doResearch();});
+document.getElementById('kdp-theme').addEventListener('keydown',e=>{if(e.key==='Enter')genTitles();});
+</script>
 </body>
 </html>
