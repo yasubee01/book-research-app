@@ -316,13 +316,9 @@ window.addEventListener('load',()=>{
   updateSettingsStatus();
 });
 
-// アフィリエイトURL生成
+// アフィリエイトURL生成（Amazon申請承認後にもしもリンクに切替）
 function genAffLink(title){
-  const s=getSettings();
   const enc=encodeURIComponent(title);
-  if(s.aId&&s.sId){
-    return `https://af.moshimo.com/af/c/click?a_id=${s.aId}&p_id=170&pc_id=185&s_id=${s.sId}&url=https%3A%2F%2Fwww.amazon.co.jp%2Fs%3Fk%3D${enc}%26i%3Dstripbooks`;
-  }
   return `https://www.amazon.co.jp/s?k=${enc}&i=stripbooks`;
 }
 
