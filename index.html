@@ -371,8 +371,8 @@ async function doResearch(){
     </div>`;
 
   try{
-    const prompt=`あなたはKDP出版の専門家です。「${kw}」というキーワードで日本のAmazonに実際に存在する本を8冊リストアップしてください。架空の本は絶対禁止。実在が不確かな本は除外。JSONのみ返答:
-{"books":[{"title":"正確なタイトル","author":"著者名","format":"Amazon","price":"¥1540","rating":"4.2","reviews":"312","rank":"5","pages":"200","description":"内容説明80文字","tags":["タグ1","タグ2"]}],"insight":"このジャンルの出版機会80文字"}`;
+    const prompt=`「${kw}」というジャンルで日本のAmazonで販売されている大人向け自己啓発・恋愛・男性向け本を8冊リストアップしてください。確実に知っている本のみ。不明な情報は省略してください。以下のJSON形式のみで返答（説明文不要）:
+{"books":[{"title":"本のタイトル","author":"著者名","format":"Amazon","price":"¥1540","rating":"4.2","reviews":"312","rank":"5","pages":"200","description":"内容説明80文字","tags":["タグ1","タグ2"]}],"insight":"このジャンルの出版機会80文字"}`;
 
     const text=await callClaude(prompt);
     const match=text.match(/\{[\s\S]*\}/);
