@@ -376,7 +376,7 @@ async function doResearch(){
 
     const text=await callClaude(prompt);
     const match=text.match(/\{[\s\S]*\}/);
-    if(!match)throw new Error('データ取得に失敗しました');
+    if(!match)throw new Error('JSONが見つかりません。レスポンス: '+text.slice(0,200));
     const parsed=JSON.parse(match[0]);
     const books=parsed.books||[];
     if(books.length===0)throw new Error('本が見つかりませんでした');
@@ -420,7 +420,7 @@ async function doResearch(){
       <div class="state-box" style="border-color:var(--red);border-style:solid;">
         <div class="icon">⚠️</div>
         <div style="color:var(--red);font-weight:700;margin-bottom:8px;">エラー</div>
-        <div style="font-size:13px;">${e.message}</div>
+        <div style="font-size:13px;word-break:break-all;">${e.message}</div>
       </div>`;
   }finally{
     btn.disabled=false;btn.textContent='リサーチ';
